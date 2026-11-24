@@ -4,8 +4,6 @@ All creature and coral imagery is cut out from openly licensed photographs (CC0,
 Cut-outs were made automatically (Apple Vision subject lifting), then flipped/rotated/trimmed and colour-graded.
 CC BY / BY-SA licenses require attribution if this project is distributed; BY-SA derivatives must keep the same license.
 
-Rock, sand and pebble textures: ambientCG.com (CC0 public domain): Rock062, Rock060, Gravel022, Rocks022, Gravel026, Ground097, Ground093A.
-
 | Source id | From | License | Author / attribution | Original |
 |---|---|---|---|---|
 | angel_0 | Wikimedia Commons | CC BY-SA 4.0 | see source page | https://commons.wikimedia.org/wiki/File:Pez_ángel_emperador_(Pomacanthus_imperator),_mar_Rojo,_Egipto,_2023-04-17,_DD_104.jpg |
@@ -71,8 +69,14 @@ Rock, sand and pebble textures: ambientCG.com (CC0 public domain): Rock062, Rock
 | i_staghorn_17 | iNaturalist | CC BY | (c) Robin White, some rights reserved (CC BY) | https://www.inaturalist.org/observations/98067371 |
 | i_staghorn_22 | iNaturalist | CC BY | (c) Robin White, some rights reserved (CC BY) | https://www.inaturalist.org/observations/143507753 |
 | i_staghorn_3 | iNaturalist | CC BY | (c) Mario Bassini, some rights reserved (CC BY) | https://www.inaturalist.org/observations/145519312 |
-| i_star_10 | iNaturalist | CC BY | (c) marique, some rights reserved (CC BY) | https://www.inaturalist.org/observations/92611682 |
-| i_star_18 | iNaturalist | CC BY | (c) Robin White, some rights reserved (CC BY) | https://www.inaturalist.org/observations/140328246 |
+| i_star2_19 | iNaturalist | CC BY | (c) R Vasconcellos, some rights reserved (CC BY) | https://www.inaturalist.org/observations/258250282 |
+| i_star2_27 | iNaturalist | CC BY | (c) Doreen, some rights reserved (CC BY) | https://www.inaturalist.org/observations/344784498 |
+| i_star2_6 | iNaturalist | CC BY | (c) PampaSorro, some rights reserved (CC BY) | https://www.inaturalist.org/observations/337070775 |
+| i_star3_15 | iNaturalist | CC BY | (c) Debra Baker, some rights reserved (CC BY) | https://www.inaturalist.org/observations/292577790 |
+| i_star3_21 | iNaturalist | CC BY | (c) Debra Baker, some rights reserved (CC BY) | https://www.inaturalist.org/observations/341632686 |
+| i_star3_26 | iNaturalist | CC BY | (c) Debra Baker, some rights reserved (CC BY) | https://www.inaturalist.org/observations/333535599 |
+| i_star4_23 | iNaturalist | CC BY | (c) Pauline Walsh Jacobson, some rights reserved (CC BY) | https://www.inaturalist.org/observations/167570435 |
+| i_star4_26 | iNaturalist | CC BY | (c) Debra Baker, some rights reserved (CC BY) | https://www.inaturalist.org/observations/244457954 |
 | i_suncoral_15 | iNaturalist | CC BY | (c) Alberto Alcalá, some rights reserved (CC BY) | https://www.inaturalist.org/observations/150378175 |
 | i_suncoral_20 | iNaturalist | CC BY | (c) Ben Jobson, some rights reserved (CC BY) | https://www.inaturalist.org/observations/274557967 |
 | i_suncoral_21 | iNaturalist | CC BY | (c) Ben Jobson, some rights reserved (CC BY) | https://www.inaturalist.org/observations/274557967 |

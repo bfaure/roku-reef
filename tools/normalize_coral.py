@@ -25,7 +25,7 @@ for name,c in C.items():
     st=ImageStat.Stat(rgb.convert('L'),m);mean,sd=st.mean[0],max(st.stddev[0],1)
     rgb=ImageEnhance.Contrast(rgb).enhance(max(.75,min(1.3,(sd*.5+44*.5)/sd)))
     mean2=ImageStat.Stat(rgb.convert('L'),m).mean[0];rgb=ImageEnhance.Brightness(rgb).enhance(max(.75,min(1.35,(mean2*.45+120*.55)/max(mean2,1))))
-    sat=ImageStat.Stat(rgb.convert('HSV').split()[1],m).mean[0];rgb=ImageEnhance.Color(rgb).enhance(max(.45,min(1.0,(sat*.35+72*.65)/max(sat,1))))
+    sat=ImageStat.Stat(rgb.convert('HSV').split()[1],m).mean[0];rgb=ImageEnhance.Color(rgb).enhance(.95 if c['kind']=='star' else max(.45,min(1.0,(sat*.35+72*.65)/max(sat,1))))
     a=im.split()[3];im=rgb.convert('RGBA');im.putalpha(a)
     mh=c.get('maxh',900)
     if im.height>mh: im=im.resize((round(im.width*mh/im.height),mh),Image.LANCZOS)

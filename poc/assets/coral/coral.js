@@ -96,16 +96,16 @@ window.CORAL_ASSETS={
   "hp": 628
  },
  "star_a": {
-  "kind": "hard",
-  "h": 120,
-  "w": 1003,
-  "hp": 900
+  "kind": "star",
+  "h": 44,
+  "w": 694,
+  "hp": 563
  },
  "star_b": {
-  "kind": "hard",
-  "h": 130,
-  "w": 1131,
-  "hp": 900
+  "kind": "star",
+  "h": 44,
+  "w": 856,
+  "hp": 834
  },
  "elk_a": {
   "kind": "hard",
@@ -238,5 +238,41 @@ window.CORAL_ASSETS={
   "h": 100,
   "w": 1197,
   "hp": 900
+ },
+ "star_c": {
+  "kind": "star",
+  "h": 44,
+  "w": 388,
+  "hp": 399
+ },
+ "star_d": {
+  "kind": "star",
+  "h": 44,
+  "w": 822,
+  "hp": 708
+ },
+ "star_e": {
+  "kind": "star",
+  "h": 44,
+  "w": 576,
+  "hp": 562
+ },
+ "star_f": {
+  "kind": "star",
+  "h": 44,
+  "w": 494,
+  "hp": 409
+ },
+ "star_g": {
+  "kind": "star",
+  "h": 44,
+  "w": 698,
+  "hp": 678
+ },
+ "star_h": {
+  "kind": "star",
+  "h": 44,
+  "w": 834,
+  "hp": 768
  }
 };

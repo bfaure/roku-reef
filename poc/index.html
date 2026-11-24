@@ -142,7 +142,7 @@ function starfish(c,x,y,s,col){c.save();c.translate(x,y);c.scale(1,.45);c.rotate
 // ---------- photo coral
 const CIMG={};
 function coralGroups(){const g={};for(const k in (window.CORAL_ASSETS||{}))if(CIMG[k])(g[CORAL_ASSETS[k].kind]=g[CORAL_ASSETS[k].kind]||[]).push(k);return g;}
-function bakeCoral(key,wid,hgt,flip,hue){const c=mk(Math.ceil(wid),Math.ceil(hgt)),x=c.getContext('2d');x.filter=`hue-rotate(${hue||0}deg) saturate(${rr(.72,.88)})`;
+function bakeCoral(key,wid,hgt,flip,hue,vivid){const c=mk(Math.ceil(wid),Math.ceil(hgt)),x=c.getContext('2d');x.filter=vivid?'saturate(1.05) brightness(1.12)':`hue-rotate(${hue||0}deg) saturate(${rr(.72,.88)})`;
   if(flip){x.translate(wid,0);x.scale(-1,1);}x.drawImage(CIMG[key],0,0,wid,hgt);x.setTransform(1,0,0,1,0,0);x.filter='none';
   x.globalCompositeOperation='source-atop';const g=x.createLinearGradient(0,0,0,hgt);g.addColorStop(0,'rgba(120,200,230,.10)');g.addColorStop(.6,'rgba(20,90,130,.10)');g.addColorStop(1,'rgba(5,25,40,.45)');
   x.fillStyle=g;x.fillRect(0,0,wid,hgt);
@@ -183,6 +183,13 @@ function placePhotoCorals(b,c,sandLine){const G=coralGroups(),s=b.scale,n=b.widt
     const bc=bakeCoral(it.key,it.wid,it.hgt,it.flip,it.hue);
     coralShadow(c,bc,it.x,it.y,it.wid,it.hgt,s);if(it.dark){const x=bc.getContext('2d');x.globalCompositeOperation='source-atop';x.fillStyle=`rgba(10,20,28,${it.dark})`;x.fillRect(0,0,bc.width,bc.height);}
     c.drawImage(bc,it.x-it.wid/2,it.y-it.hgt);}
+  // starfish lying on the reef and sand: seen at an angle, so squashed vertically (flatter on the sand than on the slope)
+  if(G.star&&b.name!='far'){const nS=Math.round(n/((b.name=='near'?380:650)*s));
+    for(let i=0;i<nS;i++){for(let k=0;k<20;k++){const x=rr(60,n-60),t=b.top(x),onSand=t>sandLine||rng()<.3,y=onSand?Math.max(t+8*s,H-rr(12,70)*s):t+rr(25,Math.max(30,(H-t)*.7));
+        if(y>H-10||!clear({x,y,wid:80*s,hgt:50*s}))continue;
+        const key=pick(G.star),A=CORAL_ASSETS[key],sz=A.h*s*rr(1.5,2.4),wd=sz*A.w/A.hp,bc=bakeCoral(key,wd,sz,rng()<.5,0,1),sq=onSand?rr(.42,.55):rr(.62,.85),rot=rr(0,TAU);
+        c.save();c.globalCompositeOperation='source-atop';c.filter=`blur(${4*s}px)`;c.fillStyle='rgba(0,10,18,.22)';c.beginPath();c.ellipse(x+3*s,y+4*s,wd*.3,sz*sq*.3,0,0,TAU);c.fill();c.filter='none';c.restore();
+        c.save();c.translate(x,y);c.scale(1,sq);c.rotate(rot);c.drawImage(bc,-wd/2,-sz/2);c.restore();break;}}}
   for(const it of b.sway)it.cv=bakeCoral(it.key,it.wid,it.hgt,it.flip,it.hue);
   b.sway.sort((a,b)=>a.y-b.y);return true;}
 // sway warp: horizontal strips displaced more toward the top (rooted at the base)
@@ -339,7 +346,7 @@ function genBand(b){
     case'bush':bush(c,x,y,sc,col);break;case'boulder':boulder(c,x,y,rr(22,45)*sc,col);break;case'barrel':barrel(c,x,y,sc,pick(['#a0522d','#8e4fa8','#c96a3a']));break;
     case'urchin':urchin(c,x,y,sc);break;}}
   // sand details
-  for(let i=0;i<n/260;i++){const x=rr(0,n);if(b.top(x)>sandY+10)starfish(c,x,rr(Math.max(sandY,b.top(x)-20),H-5),s,pick(['#ff7a30','#3a6ee8','#e84a6a']));}
+  if(!window.CORAL_ASSETS)for(let i=0;i<n/260;i++){const x=rr(0,n);if(b.top(x)>sandY+10)starfish(c,x,rr(Math.max(sandY,b.top(x)-20),H-5),s,pick(['#ff7a30','#3a6ee8','#e84a6a']));}
   // dynamic decor: anemones, seagrass, eels, bubble vents
   b.anemones=[];b.grass=[];b.eels=[];b.emitters=[];b.crawlers=[];b.debris=[];b.octos=[];
   const spot=()=>{for(let k=0;k<50;k++){const x=rr(150,n-150),t=b.top(x);if(t<sandLine-20)return[x,t+rr(0,30)*s];}return[rr(150,n-150),H*.8];};

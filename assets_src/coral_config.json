@@ -80,14 +80,14 @@
   "h": 110
  },
  "star_a": {
-  "src": "i_star_10",
-  "kind": "hard",
-  "h": 120
+  "src": "i_star2_19",
+  "kind": "star",
+  "h": 44
  },
  "star_b": {
-  "src": "i_star_18",
-  "kind": "hard",
-  "h": 130
+  "src": "i_star2_27",
+  "kind": "star",
+  "h": 44
  },
  "elk_a": {
   "src": "i_elkhorn_25",
@@ -198,5 +198,35 @@
   "src": "i_torch_6",
   "kind": "soft",
   "h": 100
+ },
+ "star_c": {
+  "src": "i_star2_6",
+  "kind": "star",
+  "h": 44
+ },
+ "star_d": {
+  "src": "i_star3_15",
+  "kind": "star",
+  "h": 44
+ },
+ "star_e": {
+  "src": "i_star3_21",
+  "kind": "star",
+  "h": 44
+ },
+ "star_f": {
+  "src": "i_star3_26",
+  "kind": "star",
+  "h": 44
+ },
+ "star_g": {
+  "src": "i_star4_23",
+  "kind": "star",
+  "h": 44
+ },
+ "star_h": {
+  "src": "i_star4_26",
+  "kind": "star",
+  "h": 44
  }
 }
