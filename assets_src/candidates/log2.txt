@@ -1,0 +1,10 @@
+lion 24
+hind 24
+wrasse 24
+puffer 24
+anthias 24
+chromis 24
+shark 24
+parrot 24
+trigger 24
+gramma 24

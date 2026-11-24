@@ -1,0 +1,155 @@
+{
+ "angel_a": {
+  "src": "angel_0",
+  "flip": false,
+  "species": "angel"
+ },
+ "bluetang_a": {
+  "src": "bluetang_0",
+  "flip": false,
+  "species": "bluetang"
+ },
+ "bluetang_b": {
+  "src": "bluetang_17",
+  "flip": true,
+  "species": "bluetang"
+ },
+ "butterfly_a": {
+  "src": "butterfly_1",
+  "flip": false,
+  "species": "butterfly"
+ },
+ "clown_a": {
+  "src": "i_clown_9",
+  "flip": true,
+  "species": "clown",
+  "maxw": 420
+ },
+ "hind_a": {
+  "src": "hind_19",
+  "flip": true,
+  "species": "hind"
+ },
+ "hind_b": {
+  "src": "hind_7",
+  "flip": false,
+  "species": "hind"
+ },
+ "idol_a": {
+  "src": "idol_0",
+  "flip": false,
+  "species": "idol"
+ },
+ "idol_b": {
+  "src": "idol_2",
+  "flip": false,
+  "rot": 16,
+  "species": "idol"
+ },
+ "lion_a": {
+  "src": "lion_14",
+  "flip": true,
+  "species": "lion"
+ },
+ "yellowtang_a": {
+  "src": "yellowtang_0",
+  "flip": true,
+  "species": "yellowtang"
+ },
+ "yellowtang_b": {
+  "src": "yellowtang_22",
+  "flip": true,
+  "species": "yellowtang"
+ },
+ "puffer_a": {
+  "src": "puffer_17",
+  "species": "puffer"
+ },
+ "puffer_b": {
+  "src": "puffer_6",
+  "flip": true,
+  "species": "puffer"
+ },
+ "anthias_a": {
+  "src": "anthias_16",
+  "species": "anthias",
+  "maxw": 320
+ },
+ "anthias_b": {
+  "src": "anthias_19",
+  "flip": true,
+  "species": "anthias",
+  "maxw": 320
+ },
+ "chromis_a": {
+  "src": "chromis_11",
+  "crop": [
+   0,
+   0,
+   1,
+   0.8
+  ],
+  "species": "chromis",
+  "maxw": 300
+ },
+ "chromis_b": {
+  "src": "chromis_16",
+  "flip": true,
+  "species": "chromis",
+  "maxw": 300
+ },
+ "shark_a": {
+  "src": "i_blacktip_19",
+  "species": "shark",
+  "maxw": 900,
+  "rot": -13
+ },
+ "parrot_a": {
+  "src": "parrot_2",
+  "species": "parrot"
+ },
+ "parrot_b": {
+  "src": "parrot_4",
+  "flip": true,
+  "species": "parrot"
+ },
+ "trigger_a": {
+  "src": "trigger_16",
+  "flip": true,
+  "species": "trigger"
+ },
+ "trigger_b": {
+  "src": "trigger_2",
+  "flip": true,
+  "species": "trigger"
+ },
+ "gramma_a": {
+  "src": "gramma_1",
+  "flip": true,
+  "species": "gramma",
+  "maxw": 360
+ },
+ "clown_b": {
+  "src": "i_clown2_2",
+  "flip": true,
+  "species": "clown",
+  "maxw": 420
+ },
+ "shark_b": {
+  "src": "i_blacktip_23",
+  "species": "shark",
+  "maxw": 900
+ },
+ "wrasse_a": {
+  "src": "i_wrasse_2",
+  "flip": true,
+  "species": "wrasse",
+  "maxw": 500
+ },
+ "wrasse_b": {
+  "src": "i_wrasse_23",
+  "rot": -9,
+  "species": "wrasse",
+  "maxw": 500
+ }
+}

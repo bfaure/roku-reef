@@ -1,0 +1,202 @@
+{
+ "fan_c": {
+  "src": "i_fan_9",
+  "kind": "fan",
+  "h": 200
+ },
+ "fan_d": {
+  "src": "i_fan_13",
+  "kind": "fan",
+  "h": 210
+ },
+ "soft_a": {
+  "src": "i_softcoral_10",
+  "kind": "soft",
+  "h": 170
+ },
+ "soft_b": {
+  "src": "i_softcoral_14",
+  "kind": "soft",
+  "h": 120
+ },
+ "anem_a": {
+  "src": "i_anemone_6",
+  "kind": "anemone",
+  "h": 170
+ },
+ "anem_b": {
+  "src": "i_anemone_4",
+  "kind": "anemone",
+  "h": 160
+ },
+ "sponge_a": {
+  "src": "i_sponge_22",
+  "kind": "sponge",
+  "h": 150
+ },
+ "sponge_b": {
+  "src": "i_sponge_28",
+  "kind": "sponge",
+  "h": 120
+ },
+ "sponge_c": {
+  "src": "i_sponge_29",
+  "kind": "sponge",
+  "h": 130
+ },
+ "sponge_d": {
+  "src": "i_sponge_3",
+  "kind": "sponge",
+  "h": 160
+ },
+ "brain_a": {
+  "src": "i_brain2_18",
+  "kind": "hard",
+  "h": 110
+ },
+ "brain_b": {
+  "src": "i_brain2_26",
+  "kind": "hard",
+  "h": 100
+ },
+ "brain_c": {
+  "src": "i_brain_16",
+  "kind": "hard",
+  "h": 120
+ },
+ "brain_d": {
+  "src": "i_brain_25",
+  "kind": "hard",
+  "h": 110
+ },
+ "brain_e": {
+  "src": "i_brain_29",
+  "kind": "hard",
+  "h": 120
+ },
+ "brain_f": {
+  "src": "i_brain_5",
+  "kind": "hard",
+  "h": 110
+ },
+ "star_a": {
+  "src": "i_star_10",
+  "kind": "hard",
+  "h": 120
+ },
+ "star_b": {
+  "src": "i_star_18",
+  "kind": "hard",
+  "h": 130
+ },
+ "elk_a": {
+  "src": "i_elkhorn_25",
+  "kind": "hard",
+  "h": 170
+ },
+ "elk_b": {
+  "src": "i_elkhorn_4",
+  "kind": "hard",
+  "h": 160
+ },
+ "stag_a": {
+  "src": "i_staghorn_3",
+  "kind": "hard",
+  "h": 150
+ },
+ "stag_b": {
+  "src": "i_staghorn_17",
+  "kind": "hard",
+  "h": 140
+ },
+ "stag_c": {
+  "src": "i_staghorn_22",
+  "kind": "hard",
+  "h": 140
+ },
+ "leather_a": {
+  "src": "i_leather_22",
+  "kind": "hard",
+  "h": 120
+ },
+ "leather_b": {
+  "src": "i_leather_23",
+  "kind": "hard",
+  "h": 120
+ },
+ "tube_a": {
+  "src": "i_tube_16",
+  "kind": "sponge",
+  "h": 170
+ },
+ "tube_b": {
+  "src": "i_tube_28",
+  "kind": "sponge",
+  "h": 140
+ },
+ "tube_c": {
+  "src": "i_tube_1",
+  "kind": "sponge",
+  "h": 130
+ },
+ "tube_d": {
+  "src": "i_tube_0",
+  "kind": "sponge",
+  "h": 170
+ },
+ "plate_a": {
+  "src": "i_plate_11",
+  "kind": "hard",
+  "h": 130
+ },
+ "plate_b": {
+  "src": "i_plate_12",
+  "kind": "hard",
+  "h": 120
+ },
+ "plate_c": {
+  "src": "i_plate_24",
+  "kind": "hard",
+  "h": 110
+ },
+ "plate_d": {
+  "src": "i_plate_9",
+  "kind": "hard",
+  "h": 120
+ },
+ "porites_a": {
+  "src": "i_rubble_16",
+  "kind": "hard",
+  "h": 120
+ },
+ "porites_b": {
+  "src": "i_rubble_4",
+  "kind": "hard",
+  "h": 110
+ },
+ "sun_a": {
+  "src": "i_suncoral_15",
+  "kind": "hard",
+  "h": 90
+ },
+ "sun_b": {
+  "src": "i_suncoral_20",
+  "kind": "hard",
+  "h": 100
+ },
+ "sun_c": {
+  "src": "i_suncoral_21",
+  "kind": "hard",
+  "h": 90
+ },
+ "torch_a": {
+  "src": "i_torch_28",
+  "kind": "soft",
+  "h": 100
+ },
+ "torch_b": {
+  "src": "i_torch_6",
+  "kind": "soft",
+  "h": 100
+ }
+}

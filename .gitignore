@@ -1,0 +1,23 @@
+# Large/regenerable intermediates from the asset pipeline (re-create with tools/*.py + tools/cutout.js)
+assets_src/raw/*
+!assets_src/raw/credits.json
+!assets_src/raw/credits_inat.json
+assets_src/cut/
+assets_src/candidates/*_sheet.jpg
+assets_src/coral_cand/*_sheet.jpg
+assets_src/inat/*_sheet.jpg
+assets_src/*.log
+assets_src/pipeline2.sh
+
+# OS / editor
+.DS_Store
+*.swp
+__pycache__/
+
+# Roku build output (future)
+roku/out/
+*.zip
+assets_src/inat_front/*_sheet.jpg
+assets_src/raw_hi/
+assets_src/cut_hi/
+assets_src/acg/
