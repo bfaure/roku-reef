@@ -989,7 +989,7 @@ function spawnShark(){const b=rng()<.6?BANDS[2]:BANDS[1];const dir=rng()<.5?1:-1
   const sh=new Fish(b,'shark',{x,y,dir,tx:dir>0?b.width+2000:-2000,ty:y,life:1e9,sz:rr(.85,1.1)});sh.exiting=true;b.fish.push(sh);b.predators.push(sh);}
 function spawnManta(){const b=rng()<.65?BANDS[1]:BANDS[2];const dir=rng()<.5?1:-1;const x=dir>0?camLeft(b)-400:camLeft(b)+W+400;
   const rk=['manta_a','manta_b','ray_a','ray_b','ray_c'].filter(k=>FXI[k]);b.mantas.push(rk.length?new Glider(b,pick(rk),dir,x):new Manta(b,dir,x));}
-function spawnTurtle(){const tk=['turtle_a','turtle_b'].filter(k=>FXI[k]); // turtle_c (hawksbill): near flipper overlaps the shell in the photo, can't be rigged cleanlyif(!tk.length)return;const b=rng()<.6?BANDS[2]:BANDS[1],dir=rng()<.5?1:-1;
+function spawnTurtle(){const tk=['turtle_a','turtle_b'].filter(k=>FXI[k]);/* turtle_c (hawksbill) retired: near flipper overlaps the shell */if(!tk.length)return;const b=rng()<.6?BANDS[2]:BANDS[1],dir=rng()<.5?1:-1;
   b.mantas.push(new Glider(b,pick(tk),dir,dir>0?camLeft(b)-350:camLeft(b)+W+350));}
 function spawnJellies(){const b=pick([BANDS[0],BANDS[1],BANDS[1],BANDS[2]]);const x=camLeft(b)+rr(100,W-100),n=ri(1,4);for(let i=0;i<n;i++)b.jellies.push(new Jelly(b,x+rr(-150,150)*b.scale,H+rr(40,250)*b.scale));}
 function startChase(){const b=rng()<.6?BANDS[2]:BANDS[1];const solos=b.fish.filter(f=>!f.school&&!f.home&&f.spec.beh!='cruise'&&!f.exiting&&!f.chase);if(solos.length<2)return;
