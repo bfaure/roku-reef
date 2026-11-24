@@ -787,7 +787,7 @@ function drawRigged(c,im,rig,ph){const w=im.width,h=im.height,NX=10,NY=7,P=[];
   const fl=rig.map(f=>{const px=f.p[0]*w,py=f.p[1]*h,qx=f.q[0]*w,qy=f.q[1]*h,L2=(qx-px)**2+(qy-py)**2;return{px,py,qx,qy,L2,R:f.r*w,ang:Math.sin(ph+f.ph)*f.amp};});
   for(let j=0;j<=NY;j++)for(let i=0;i<=NX;i++){let x=i/NX*w,y=j/NY*h,ox=x,oy=y;
     for(const f of fl){const sp=((ox-f.px)*(f.qx-f.px)+(oy-f.py)*(f.qy-f.py))/f.L2,cx=f.px+(f.qx-f.px)*clamp(sp,0,1),cy=f.py+(f.qy-f.py)*clamp(sp,0,1),
-      dist=Math.hypot(ox-cx,oy-cy),wt=sstep(-.05,.3,sp)*(1-sstep(f.R*.9,f.R*1.8,dist));if(wt<=0)continue;
+      dist=Math.hypot(ox-cx,oy-cy),wt=sstep(.1,.32,sp)*(1-sstep(f.R*.7,f.R*1.25,dist));if(wt<=0)continue;
       const a=f.ang*wt,ca=Math.cos(a),sa=Math.sin(a),rx=ox-f.px,ry=oy-f.py;x+=(f.px+rx*ca-ry*sa)-ox;y+=(f.py+rx*sa+ry*ca)-oy;}
     P.push([x,y,i/NX*w,j/NY*h]);}
   const at=(i,j)=>P[j*(NX+1)+i];
