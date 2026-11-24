@@ -2,7 +2,7 @@
 import json
 from PIL import Image,ImageStat
 # only pairs whose colouring genuinely matches the side-view photo; FACES: +1 head toward right, -1 left, 0 symmetric head-on
-PAIRS={"puffer_a":"puffer_0","yellowtang_a":"i_f_yellowtang_31","yellowtang_b":"i_f_yellowtang_31","lion_a":"lion_1"}
+PAIRS={"puffer_a":"puffer_0","yellowtang_a":"i_f_yellowtang_31","yellowtang_b":"i_f_yellowtang_31"}
 FACES={"puffer_0":0,"i_f_clown_38":1,"i_f_yellowtang_31":-1,"lion_1":0}
 fish=json.loads(open('poc/assets/fish/fish.js').read().split('=',1)[1].rstrip(';\n'));out={}
 for side,src in PAIRS.items():

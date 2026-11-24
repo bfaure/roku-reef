@@ -848,7 +848,25 @@ class Crawler{
     c.globalAlpha=1;}
 }
 // ---------- octopus: flowing arm mesh, breathing mantle, camouflage, hides in crevices, inks when startled
-const OCTO=['octo_a','octo_b','octo_c'];let OCTO_CAMO={};
+const OCTO=['octo_a','octo_b','octo_c'];
+const OCTO_ARMS={
+ octo_a:[{p:[.5,.4],q:[.98,.82],r:.07},{p:[.52,.55],q:[.73,.64],r:.06},{p:[.36,.5],q:[.05,.68],r:.06},{p:[.36,.6],q:[.01,.98],r:.07},{p:[.45,.62],q:[.62,.86],r:.06},{p:[.4,.65],q:[.22,.86],r:.05}],
+ octo_b:[{p:[.4,.32],q:[.43,.98],r:.07},{p:[.3,.32],q:[.15,.66],r:.06},{p:[.55,.32],q:[.92,.86],r:.07,k:.45},{p:[.57,.22],q:[.98,.55],r:.05,k:.3},{p:[.38,.42],q:[.26,.82],r:.06}],
+ octo_c:[{p:[.47,.7],q:[.43,.98],r:.07},{p:[.78,.55],q:[.97,.32],r:.06},{p:[.62,.68],q:[.84,.76],r:.06},{p:[.25,.6],q:[.08,.72],r:.06}]};
+function armWarp(key,W,Hh,t,crawl,dir,reach){const rig=OCTO_ARMS[key];if(!rig)return null;
+  const arms=rig.map((a,i)=>{const px=a.p[0]*W,py=a.p[1]*Hh,qx=a.q[0]*W,qy=a.q[1]*Hh,L2=(qx-px)**2+(qy-py)**2,sp=1.1+((i*7)%5)*.18,ph=i*2.1;
+    // leading arms (toward the facing side, x>body) reach during the pull phase; others curl independently
+    const lead=(qx-px)>0?1:-1,amp=crawl?.32:.2,bias=crawl?-lead*reach*.15:0;
+    const kk=a.k??1;return{px,py,qx,qy,L2,R:a.r*W,a:(s)=>kk*amp*Math.sin(t*sp+ph-s*2.4)*Math.pow(s,1.15)+bias*s};});
+  return(u,v)=>{const x=u*W,y=v*Hh;let dx=0,dy=0;
+    let best=null,bw=0,bs=0;
+    for(const A of arms){const s0=((x-A.px)*(A.qx-A.px)+(y-A.py)*(A.qy-A.py))/A.L2;if(s0<-.1||s0>1.3)continue;const sc=clamp(s0,0,1),cx=A.px+(A.qx-A.px)*sc,cy=A.py+(A.qy-A.py)*sc,
+      d=Math.hypot(x-cx,y-cy),w=sstep(-.05,.2,s0)*(1-sstep(A.R*.9,A.R*2,d));if(w>bw){bw=w;best=A;bs=sc;}}
+    if(!best)return[0,0];const ang=best.a(bs)*bw,ca=Math.cos(ang),sa=Math.sin(ang),rx=x-best.px,ry=y-best.py;
+    return[(best.px+rx*ca-ry*sa)-x,(best.py+rx*sa+ry*ca)-y];};}
+function warpMeshN(c,im,fn,NX,NY){const w=im.width,h=im.height,P=[];for(let j=0;j<=NY;j++)for(let i=0;i<=NX;i++){const u=i/NX,v=j/NY,[dx,dy]=fn(u,v);P.push([u*w+dx,v*h+dy,u*w,v*h]);}
+  const at=(i,j)=>P[j*(NX+1)+i];for(let j=0;j<NY;j++)for(let i=0;i<NX;i++){const a=at(i,j),b=at(i+1,j),d=at(i,j+1),e=at(i+1,j+1);
+    texTri(c,im,a[0],a[1],b[0],b[1],d[0],d[1],a[2],a[3],b[2],b[3],d[2],d[3]);texTri(c,im,b[0],b[1],e[0],e[1],d[0],d[1],b[2],b[3],e[2],e[3],d[2],d[3]);}}let OCTO_CAMO={};
 function octoCamo(key){if(OCTO_CAMO[key])return OCTO_CAMO[key];const im=FXI[key],c=mk(im.width,im.height),x=c.getContext('2d');x.drawImage(im,0,0);x.globalCompositeOperation='source-atop';
   x.globalAlpha=.85;x.fillStyle=x.createPattern(ROCK_TEX,'repeat');x.fillRect(0,0,c.width,c.height);x.globalAlpha=.35;x.fillStyle='#2a2522';x.fillRect(0,0,c.width,c.height);return OCTO_CAMO[key]=c;}
 function warpMesh(c,im,fn){const w=im.width,h=im.height,NX=9,NY=7,P=[];for(let j=0;j<=NY;j++)for(let i=0;i<=NX;i++){const u=i/NX,v=j/NY,[dx,dy]=fn(u,v);P.push([u*w+dx,v*h+dy,u*w,v*h]);}
@@ -856,7 +874,7 @@ function warpMesh(c,im,fn){const w=im.width,h=im.height,NX=9,NY=7,P=[];for(let j
     texTri(c,im,a[0],a[1],b[0],b[1],d[0],d[1],a[2],a[3],b[2],b[3],d[2],d[3]);texTri(c,im,b[0],b[1],e[0],e[1],d[0],d[1],b[2],b[3],e[2],e[3],d[2],d[3]);}}
 class Octopus{
   constructor(b){this.b=b;this.key=pick(OCTO.filter(k=>FXI[k]));this.w=rr(190,250)*b.scale;this.off=rr(0,120)*b.scale;this.dir=rng()<.5?-1:1;
-    this.ph=rr(0,TAU);this.bph=rr(0,TAU);this.cyc=0;this.jy=0;this.jetK=0;this.chroma=0;this.chromaT=rr(5,15);
+    this.ph=rr(0,TAU);this.bph=rr(0,TAU);this.seedA=rr(0,100);this.cyc=0;this.jy=0;this.jetK=0;this.chroma=0;this.chromaT=rr(5,15);
     this.relocate();this.state='emerge';this.t=0;this.camo=0;this.tilt=0;this.ink=[];}
   blocked(x){const b=this.b;return x<100||x>b.width-100||b.top(x)>H*.9||(b.sway||[]).concat(b.anemones||[]).some(it=>it.wid&&Math.abs(x-it.x)<it.wid*.5+this.w*.45&&this.off<it.hgt*.75);}
   relocate(){for(let k=0;k<60;k++){this.x=rr(200,this.b.width-200);if(!this.blocked(this.x))break;}}
@@ -897,16 +915,18 @@ class Octopus{
     if(this.jy<-2){const gy=sy-this.jy,R=this.w*.45*(1+(-this.jy)/(this.w*2)),al=.3*(1-Math.min(1,-this.jy/(this.w*1.2)));const g=c.createRadialGradient(sx,gy-R*.05,0,sx,gy-R*.05,R);g.addColorStop(0,`rgba(0,8,15,${al})`);g.addColorStop(1,'rgba(0,8,15,0)');c.fillStyle=g;c.beginPath();c.ellipse(sx,gy-R*.05,R,R*.25,0,0,TAU);c.fill();}
     const fS=this.faceS??this.dir,gth=1-Math.abs(fS),gt=gth*gth*(3-2*gth),wR=clamp((fS+1)/2,0,1);
     const W=im.width,Hh=im.height,crawl=this.state=='crawl',reach=crawl?Math.sin(this.cyc):0,jk=this.jetK,ph=this.ph,br=Math.sin(this.bph)*.035,bob=crawl?Math.sin(this.cyc*2):0;
-    const fn=(u,v)=>{const armW=sstep(.28,.95,v)*(.35+.65*Math.abs(u-.3)/.7),lead=sstep(.45,1,u),mant=(1-sstep(.12,.45,v))*(1-sstep(.15,.6,u)),idle=crawl?1:.55;
-      return[-(u-.3)*W*.4*armW*gt+reach*W*.1*armW*lead-reach*W*.045*mant+Math.sin(ph*1.6-v*5-u*3)*W*.022*armW*idle-jk*(u-.3)*W*.4*armW+jk*W*.14*armW+(u-.3)*W*br*mant,
-             -(v-.35)*Hh*.28*armW*gt+Math.cos(ph*1.4-u*6+v*2)*Hh*.02*armW*idle-Math.max(0,reach)*Hh*.05*armW*lead+bob*Hh*.012*mant-jk*(v-.35)*Hh*.3*armW+(v-.25)*Hh*br*mant];};
-    const pad=Math.ceil(W*.15),ow=W+pad*2,oh=Hh+pad*2;
+    const AW=armWarp(this.key,W,Hh,T*1.0+this.seedA,crawl,this.dir,Math.max(0,-reach));
+    const fn0=(u,v)=>{const armW=sstep(.28,.95,v)*(.35+.65*Math.abs(u-.3)/.7),lead=sstep(.45,1,u),mant=(1-sstep(.12,.45,v))*(1-sstep(.15,.6,u)),idle=crawl?1:.55;
+      return[-(u-.3)*W*.4*armW*gt+reach*W*.06*armW*lead-reach*W*.045*mant+Math.sin(ph*1.6-v*5-u*3)*W*.008*armW*idle-jk*(u-.3)*W*.4*armW+jk*W*.14*armW+(u-.3)*W*br*mant,
+             -(v-.35)*Hh*.28*armW*gt+Math.cos(ph*1.4-u*6+v*2)*Hh*.008*armW*idle-Math.max(0,reach)*Hh*.05*armW*lead+bob*Hh*.012*mant-jk*(v-.35)*Hh*.3*armW+(v-.25)*Hh*br*mant];};
+    const fn=AW?(u,v)=>{const a=fn0(u,v),b=AW(u,v);return[a[0]+b[0],a[1]+b[1]];}:fn0;
+    const pad=Math.ceil(W*.22),ow=W+pad*2,oh=Hh+pad*2;
     if(!this.o1||this.o1.width!=ow){this.o1=mk(ow,oh);this.o2=mk(ow,oh);}
-    const x1=this.o1.getContext('2d');x1.setTransform(1,0,0,1,0,0);x1.globalCompositeOperation='source-over';x1.clearRect(0,0,ow,oh);x1.translate(pad,pad);warpMesh(x1,im,fn);
+    const x1=this.o1.getContext('2d');x1.setTransform(1,0,0,1,0,0);x1.globalCompositeOperation='source-over';x1.clearRect(0,0,ow,oh);x1.translate(pad,pad);warpMeshN(x1,im,fn,24,20);
     if(this.chroma>.02){x1.setTransform(1,0,0,1,0,0);x1.globalCompositeOperation='source-atop';for(let i=0;i<2;i++){const px=((T*W*.45+i*W*.8)%(W*1.6))-W*.3+pad,g=x1.createLinearGradient(px-W*.12,0,px+W*.12,0);
       g.addColorStop(0,'rgba(30,8,6,0)');g.addColorStop(.5,`rgba(30,8,6,${.4*this.chroma})`);g.addColorStop(1,'rgba(30,8,6,0)');x1.fillStyle=g;x1.fillRect(px-W*.12,0,W*.24,oh);}}
     const cm=Math.max(this.camo,camoF*.95);
-    if(cm>.02){const x2=this.o2.getContext('2d');x2.setTransform(1,0,0,1,0,0);x2.clearRect(0,0,ow,oh);x2.translate(pad,pad);warpMesh(x2,octoCamo(this.key),fn);}
+    if(cm>.02){const x2=this.o2.getContext('2d');x2.setTransform(1,0,0,1,0,0);x2.clearRect(0,0,ow,oh);x2.translate(pad,pad);warpMeshN(x2,octoCamo(this.key),fn,24,20);}
     // both facings, weaker one first (faint), dominant one on top; body narrows a little mid-turn
     const sides=[[1,wR],[-1,1-wR]].sort((p,q)=>p[1]-q[1]),narrow=1-.45*gt;
     for(const[sg,wt]of sides){const a=wt>=.5?1:clamp((wt-.38)/.12,0,1);if(a<.02)continue;
@@ -1173,6 +1193,8 @@ else if(qs.has('rigdbg')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const ks
     if(i==0)for(const f of FLIP[k]){ctx.strokeStyle='#ff0';ctx.lineWidth=4/sc;ctx.beginPath();ctx.moveTo(f.p[0]*im.width,f.p[1]*im.height);ctx.lineTo(f.q[0]*im.width,f.q[1]*im.height);ctx.stroke();
       ctx.strokeStyle='rgba(255,0,0,.8)';ctx.beginPath();ctx.arc(f.p[0]*im.width,f.p[1]*im.height,f.r*im.width,0,TAU);ctx.stroke();}
     ctx.restore();}});}
+else if(qs.has('octoarms')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const T0=T;OCTO.forEach((kk,r)=>{for(let i=0;i<6;i++){T=i*.7;const o=new Octopus(BANDS[2]);o.key=kk;o.w=260;o.state=qs.get('st')||'rest';o.t=99;o.dur=99;o.cyc=i*.9;o.camo=0;o.dir=1;o.faceS=1;o.tilt=0;o.ink=[];o.jy=0;o.jetK=0;o.x=0;o.off=0;o.chroma=0;
+    const b=o.b;o.b={top:()=>0};o.draw(ctx,170+i*310,330+r*330);o.b=b;}});T=T0;}
 else if(qs.has('rigtest')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const ks=['turtle_a','turtle_b','turtle_c'];
   ks.forEach((k,r)=>{for(let i=0;i<6;i++){const g=new Glider(BANDS[2],k,1,0);g.L=280;g.ph=i/6*TAU;g.draw(ctx,170+i*315,180+r*340);}});}
 else if(qs.has('film')){// filmstrip: follow one fish for n frames (debug tool)
