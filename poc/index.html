@@ -142,11 +142,11 @@ function starfish(c,x,y,s,col){c.save();c.translate(x,y);c.scale(1,.45);c.rotate
 // ---------- photo coral
 const CIMG={};
 function coralGroups(){const g={};for(const k in (window.CORAL_ASSETS||{}))if(CIMG[k])(g[CORAL_ASSETS[k].kind]=g[CORAL_ASSETS[k].kind]||[]).push(k);return g;}
-function bakeCoral(key,wid,hgt,flip,hue){const c=mk(Math.ceil(wid),Math.ceil(hgt)),x=c.getContext('2d');if(hue)x.filter=`hue-rotate(${hue}deg) saturate(${rr(.85,1.1)})`;
+function bakeCoral(key,wid,hgt,flip,hue){const c=mk(Math.ceil(wid),Math.ceil(hgt)),x=c.getContext('2d');x.filter=`hue-rotate(${hue||0}deg) saturate(${rr(.72,.88)})`;
   if(flip){x.translate(wid,0);x.scale(-1,1);}x.drawImage(CIMG[key],0,0,wid,hgt);x.setTransform(1,0,0,1,0,0);x.filter='none';
   x.globalCompositeOperation='source-atop';const g=x.createLinearGradient(0,0,0,hgt);g.addColorStop(0,'rgba(120,200,230,.10)');g.addColorStop(.6,'rgba(20,90,130,.10)');g.addColorStop(1,'rgba(5,25,40,.45)');
   x.fillStyle=g;x.fillRect(0,0,wid,hgt);
-  {const M=mk(c.width,c.height),mx=M.getContext('2d');mx.drawImage(c,0,0);mx.globalCompositeOperation='multiply';mx.fillStyle='#d2ecf0';mx.fillRect(0,0,M.width,M.height);mx.globalCompositeOperation='destination-in';mx.drawImage(c,0,0);
+  {const M=mk(c.width,c.height),mx=M.getContext('2d');mx.drawImage(c,0,0);mx.globalCompositeOperation='multiply';mx.fillStyle='#c4e2e6';mx.fillRect(0,0,M.width,M.height);mx.globalCompositeOperation='destination-in';mx.drawImage(c,0,0);
    x.globalCompositeOperation='copy';x.drawImage(M,0,0);x.globalCompositeOperation='source-over';}
   x.globalCompositeOperation='source-atop';x.globalAlpha=.07;x.fillStyle='#1b6f95';x.fillRect(0,0,wid,hgt);x.globalAlpha=1;
   {const r=Math.max(2,Math.min(wid,hgt)*.035),E=mk(c.width,c.height),ex=E.getContext('2d');ex.fillStyle='#2c86ad';ex.fillRect(0,0,E.width,E.height);
@@ -1113,7 +1113,7 @@ function gradeFish(){for(const k in FRONT){const im=FRONT[k];if(im.graded)contin
 for(const k in FXI){if(k.startsWith('jelly')||FXI[k].graded)continue;const im=FXI[k],c=mk(im.width,im.height),x=c.getContext('2d');x.drawImage(im,0,0);x.globalCompositeOperation='source-atop';
     const g=x.createLinearGradient(0,0,0,im.height);g.addColorStop(0,'rgba(220,245,255,.14)');g.addColorStop(1,'rgba(0,15,35,.38)');x.fillStyle=g;x.fillRect(0,0,im.width,im.height);x.fillStyle='rgba(30,120,160,.08)';x.fillRect(0,0,im.width,im.height);c.graded=true;FXI[k]=c;}
 for(const k in IMG){const im=IMG[k];if(im.graded)continue;const c=mk(im.width,im.height),x=c.getContext('2d');
-    x.filter='saturate(.88) contrast(1.06) brightness(.97)';x.drawImage(im,0,0);x.filter='none';x.globalCompositeOperation='source-atop';
+    x.filter='saturate(.78) contrast(1.04) brightness(.97)';x.drawImage(im,0,0);x.filter='none';x.globalCompositeOperation='source-atop';
     const g=x.createLinearGradient(0,0,0,im.height);g.addColorStop(0,'rgba(235,250,255,.10)');g.addColorStop(.35,'rgba(200,235,250,0)');g.addColorStop(.7,'rgba(0,30,55,.12)');g.addColorStop(1,'rgba(0,15,35,.42)');
     x.fillStyle=g;x.fillRect(0,0,im.width,im.height);x.fillStyle='rgba(30,120,160,.09)';x.fillRect(0,0,im.width,im.height);{const r=Math.max(2,Math.min(im.width,im.height)*.03),E=mk(c.width,c.height),ex=E.getContext('2d');ex.fillStyle='#3a90b5';ex.fillRect(0,0,E.width,E.height);ex.globalCompositeOperation='destination-out';ex.filter=`blur(${r}px)`;ex.drawImage(c,0,0);x.globalCompositeOperation='source-atop';x.globalAlpha=.4;x.drawImage(E,0,0);x.globalAlpha=1;}
     c.graded=true;IMG[k]=c;
