@@ -833,13 +833,19 @@ class Crawler{
     const sl=Math.atan2(b.top(this.x+this.w*.4)-b.top(this.x-this.w*.4),this.w*.8);this.tilt+=(clamp(sl*.7,-.35,.35)-this.tilt)*Math.min(1,dt*3);
     this.ph+=dt*(1+this.speed/(4*b.scale))*(this.kind=='crab'?2.2:1.2);}
   draw(c,sx,sy){const im=FXI[this.key];if(!im)return;const w=this.w,k=w/im.width,h=im.height*k,ph=this.ph,moving=this.speed>1;
-    c.save();c.translate(sx,sy);c.rotate(this.tilt);if(this.kind=='hermit'){const fS=this.faceS??this.dir,sx=Math.sign(fS||1)*Math.max(.12,Math.abs(fS));c.scale(sx,1-.06*(1-Math.abs(fS)));}
     const bob=moving?Math.abs(Math.sin(ph*2))*h*.03:0,N=16,sh=im.height/N;
-    for(let j=0;j<N;j++){const v=(j+.5)/N;let dx=0;
-      if((this.kind=='crab'||this.kind=='hermit')&&v>.4&&moving)dx=Math.sin(ph*2.4-v*5)*w*.016*Math.min(1,(v-.4)/.25);   // legs scuttle: smooth ripple down the legs
-      if(this.kind=='lobster'||this.kind=='shrimp'){if(v<.55)dx=Math.sin(T*1.4+this.x*.01+v*4)*w*.05*Math.pow(1-v/.55,1.5);} // antennae sway
-      c.drawImage(im,0,j*sh,im.width,Math.min(sh+1,im.height-j*sh),-w/2+dx,-h+j*sh*k-bob*(v<.55?1:.4+.6*(1-v)),w,sh*k+1.2);}
-    c.restore();}
+    const body=(sxs,sy2,alpha)=>{c.save();c.translate(sx,sy);c.rotate(this.tilt);c.scale(sxs,sy2);c.globalAlpha=alpha;
+      for(let j=0;j<N;j++){const v=(j+.5)/N;let dx=0;
+        if((this.kind=='crab'||this.kind=='hermit')&&v>.4&&moving)dx=Math.sin(ph*2.4-v*5)*w*.016*Math.min(1,(v-.4)/.25);   // legs scuttle: smooth ripple down the legs
+        if(this.kind=='lobster'||this.kind=='shrimp'){if(v<.55)dx=Math.sin(T*1.4+this.x*.01+v*4)*w*.05*Math.pow(1-v/.55,1.5);} // antennae sway
+        c.drawImage(im,0,j*sh,im.width,Math.min(sh+1,im.height-j*sh),-w/2+dx,-h+j*sh*k-bob*(v<.55?1:.4+.6*(1-v)),w,sh*k+1.2);}
+      c.restore();};
+    if(this.kind!='hermit'){body(1,1,1);return;}
+    // hermit turning: bulky shell never goes paper-thin; narrow to ~60%, blend the two facings around the midpoint, small dip
+    const fS=this.faceS??this.dir,a=Math.abs(fS),wdt=.6+.4*a,dip=1-.05*(1-a),wR=(fS+1)/2;
+    const sides=[[1,wR],[-1,1-wR]].sort((p,q)=>p[1]-q[1]);
+    for(const[sg,wt]of sides){const al=wt>=.5?1:clamp((wt-.3)/.2,0,1);if(al>.01)body(sg*wdt,dip,al);}
+    c.globalAlpha=1;}
 }
 // ---------- octopus: flowing arm mesh, breathing mantle, camouflage, hides in crevices, inks when startled
 const OCTO=['octo_a','octo_b','octo_c'];let OCTO_CAMO={};
@@ -1161,6 +1167,7 @@ else if(qs.has('octoturn')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);OCTO.f
 else if(qs.has('sharkzoom')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);for(let i=0;i<3;i++){const f=new Fish(BANDS[2],'shark',{x:0,y:0,dir:1,sz:1});f.L=1100;f.ampS=1;f.pitch=0;f.face=1;f.bend=0;f.phase=1+i*1.4;drawPhotoFish(ctx,f,W/2,180+i*340);}}
 else if(qs.has('lionturn')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const f=new Fish(BANDS[2],qs.get('sp')||'lion',{x:0,y:0,dir:1,sz:1});f.L=260;f.ampS=.5;f.pitch=0;f.phase=1;{const fk=Object.keys(FRONT_ASSETS).filter(k=>FRONT_ASSETS[k].side==f.asset.key);f.front=fk[0]||null;}
   for(let i=0;i<16;i++){f.turnT=i/15;f.dir=1;drawPhotoFish(ctx,f,180+(i%4)*500,150+Math.floor(i/4)*270);ctx.fillStyle='#fff';ctx.font='20px monospace';ctx.fillText('t='+(i/15).toFixed(2),60+(i%4)*500,40+Math.floor(i/4)*270);}}
+else if(qs.has('hermitturn')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);for(let i=0;i<7;i++){const cr=new Crawler(BANDS[2],'hermit_a');cr.w=200;cr.speed=0;cr.tilt=0;cr.faceS=1-2*i/6;cr.dir=-1;cr.draw(ctx,160+i*270,500);}}
 else if(qs.has('rigtest')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const ks=['turtle_a','turtle_b','turtle_c'];
   ks.forEach((k,r)=>{for(let i=0;i<6;i++){const g=new Glider(BANDS[2],k,1,0);g.L=280;g.ph=i/6*TAU;g.draw(ctx,170+i*315,180+r*340);}});}
 else if(qs.has('film')){// filmstrip: follow one fish for n frames (debug tool)
