@@ -989,7 +989,7 @@ function spawnShark(){const b=rng()<.6?BANDS[2]:BANDS[1];const dir=rng()<.5?1:-1
   const sh=new Fish(b,'shark',{x,y,dir,tx:dir>0?b.width+2000:-2000,ty:y,life:1e9,sz:rr(.85,1.1)});sh.exiting=true;b.fish.push(sh);b.predators.push(sh);}
 function spawnManta(){const b=rng()<.65?BANDS[1]:BANDS[2];const dir=rng()<.5?1:-1;const x=dir>0?camLeft(b)-400:camLeft(b)+W+400;
   const rk=['manta_a','manta_b','ray_a','ray_b','ray_c'].filter(k=>FXI[k]);b.mantas.push(rk.length?new Glider(b,pick(rk),dir,x):new Manta(b,dir,x));}
-function spawnTurtle(){const tk=['turtle_a','turtle_b','turtle_c'].filter(k=>FXI[k]);if(!tk.length)return;const b=rng()<.6?BANDS[2]:BANDS[1],dir=rng()<.5?1:-1;
+function spawnTurtle(){const tk=['turtle_a','turtle_b'].filter(k=>FXI[k]); // turtle_c (hawksbill): near flipper overlaps the shell in the photo, can't be rigged cleanlyif(!tk.length)return;const b=rng()<.6?BANDS[2]:BANDS[1],dir=rng()<.5?1:-1;
   b.mantas.push(new Glider(b,pick(tk),dir,dir>0?camLeft(b)-350:camLeft(b)+W+350));}
 function spawnJellies(){const b=pick([BANDS[0],BANDS[1],BANDS[1],BANDS[2]]);const x=camLeft(b)+rr(100,W-100),n=ri(1,4);for(let i=0;i<n;i++)b.jellies.push(new Jelly(b,x+rr(-150,150)*b.scale,H+rr(40,250)*b.scale));}
 function startChase(){const b=rng()<.6?BANDS[2]:BANDS[1];const solos=b.fish.filter(f=>!f.school&&!f.home&&f.spec.beh!='cruise'&&!f.exiting&&!f.chase);if(solos.length<2)return;
@@ -1168,6 +1168,11 @@ else if(qs.has('sharkzoom')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);for(l
 else if(qs.has('lionturn')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const f=new Fish(BANDS[2],qs.get('sp')||'lion',{x:0,y:0,dir:1,sz:1});f.L=260;f.ampS=.5;f.pitch=0;f.phase=1;{const fk=Object.keys(FRONT_ASSETS).filter(k=>FRONT_ASSETS[k].side==f.asset.key);f.front=fk[0]||null;}
   for(let i=0;i<16;i++){f.turnT=i/15;f.dir=1;drawPhotoFish(ctx,f,180+(i%4)*500,150+Math.floor(i/4)*270);ctx.fillStyle='#fff';ctx.font='20px monospace';ctx.fillText('t='+(i/15).toFixed(2),60+(i%4)*500,40+Math.floor(i/4)*270);}}
 else if(qs.has('hermitturn')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);for(let i=0;i<7;i++){const cr=new Crawler(BANDS[2],'hermit_a');cr.w=200;cr.speed=0;cr.tilt=0;cr.faceS=1-2*i/6;cr.dir=-1;cr.draw(ctx,160+i*270,500);}}
+else if(qs.has('rigdbg')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const ks=['turtle_a','turtle_b','turtle_c'];
+  ks.forEach((k,r)=>{const im=FXI[k];for(let i=0;i<4;i++){const sc=440/im.width,ox=40+i*470,oy=20+r*350;ctx.save();ctx.translate(ox,oy);ctx.scale(sc,sc);drawRigged(ctx,im,FLIP[k],i/4*TAU);
+    if(i==0)for(const f of FLIP[k]){ctx.strokeStyle='#ff0';ctx.lineWidth=4/sc;ctx.beginPath();ctx.moveTo(f.p[0]*im.width,f.p[1]*im.height);ctx.lineTo(f.q[0]*im.width,f.q[1]*im.height);ctx.stroke();
+      ctx.strokeStyle='rgba(255,0,0,.8)';ctx.beginPath();ctx.arc(f.p[0]*im.width,f.p[1]*im.height,f.r*im.width,0,TAU);ctx.stroke();}
+    ctx.restore();}});}
 else if(qs.has('rigtest')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const ks=['turtle_a','turtle_b','turtle_c'];
   ks.forEach((k,r)=>{for(let i=0;i<6;i++){const g=new Glider(BANDS[2],k,1,0);g.L=280;g.ph=i/6*TAU;g.draw(ctx,170+i*315,180+r*340);}});}
 else if(qs.has('film')){// filmstrip: follow one fish for n frames (debug tool)
