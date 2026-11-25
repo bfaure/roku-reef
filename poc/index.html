@@ -186,7 +186,7 @@ function placePhotoCorals(b,c,sandLine){const G=coralGroups(),s=b.scale,n=b.widt
   // starfish lying on the reef and sand: seen at an angle, so squashed vertically (flatter on the sand than on the slope)
   if(G.star&&b.name!='far'){const nS=Math.round(n/((b.name=='near'?380:650)*s));
     for(let i=0;i<nS;i++){for(let k=0;k<20;k++){const x=rr(60,n-60),t=b.top(x),onSand=t>sandLine||rng()<.3,y=onSand?Math.max(t+8*s,H-rr(12,70)*s):t+rr(25,Math.max(30,(H-t)*.7));
-        if(y>H-10||!clear({x,y,wid:80*s,hgt:50*s}))continue;
+        if(y>H-10||!clear({x,y,wid:80*s,hgt:50*s})||(b.statItems||[]).some(it=>Math.abs(x-it.x)<it.wid*.45+30*s&&y>it.y-it.hgt-20*s&&y<it.y+20*s))continue;
         const key=pick(G.star),A=CORAL_ASSETS[key],sz=A.h*s*rr(1.5,2.4),wd=sz*A.w/A.hp,bc=bakeCoral(key,wd,sz,rng()<.5,0,1),sq=onSand?rr(.42,.55):rr(.62,.85),rot=rr(0,TAU);
         c.save();c.globalCompositeOperation='source-atop';c.filter=`blur(${4*s}px)`;c.fillStyle='rgba(0,10,18,.22)';c.beginPath();c.ellipse(x+3*s,y+4*s,wd*.3,sz*sq*.3,0,0,TAU);c.fill();c.filter='none';c.restore();
         c.save();c.translate(x,y);c.scale(1,sq);c.rotate(rot);c.drawImage(bc,-wd/2,-sz/2);c.restore();break;}}}
