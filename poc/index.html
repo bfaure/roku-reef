@@ -323,11 +323,11 @@ function genBand(b){
       c.save();openPath(o);c.clip();const ig=c.createLinearGradient(0,o.bot-o.h,0,o.bot);ig.addColorStop(0,'rgba(0,10,20,.0)');ig.addColorStop(1,'rgba(0,10,20,.0)');c.restore();}
     else{c.save();openPath(o);c.clip();const cg=c.createRadialGradient(o.x,o.bot-o.h*.4,4,o.x,o.bot-o.h*.4,o.w*.75);cg.addColorStop(0,'#01060a');cg.addColorStop(.45,'#03121c');cg.addColorStop(.8,'rgba(8,34,48,.92)');cg.addColorStop(1,'rgba(20,60,80,.6)');c.fillStyle=cg;c.fillRect(o.x-o.w,o.bot-o.h*1.5,o.w*2,o.h*2);c.restore();}}
   // pale sand bed on the true sea floor, in front of the rock base
-  if(b.name!='far'&&TEXI.sand_a){const sn=makeNoise(n,Math.round(140*s)+5),sn2=makeNoise(n,Math.round(30*s)+3),base0=H-(b.name=='near'?rr(.06,.09):.05)*H,lt=photoTex(rng()<.5?'sand_a':'sand_b',512,[['screen','#f4ecd8',.45]]);
+  if(b.name!='far'&&TEXI.sand_a){const sn=makeNoise(n,Math.round(140*s)+5),sn2=makeNoise(n,Math.round(30*s)+3),base0=H-(b.name=='near'?rr(.06,.09):.05)*H,lt=photoTex(rng()<.5?'sand_a':'sand_b',512,[['screen','#efe6d2',.18],['multiply','#b9c4c0',.35]]);
     const edge=x=>base0+((sn(x,4)-.5)*55+(sn2(x,8)-.5)*12)*s;
     c.save();c.beginPath();c.moveTo(0,H);for(let x=0;x<=n;x+=4)c.lineTo(x,Math.max(edge(x),Math.min(b.top(x)+6*s,H)));c.lineTo(n,H);c.closePath();c.clip();
-    c.save();c.translate(0,base0-60*s);c.scale(s*1.1,s*.5);c.fillStyle=c.createPattern(lt,'repeat');c.fillRect(0,0,n/(s*1.1),(H-base0+60*s)/(s*.5)+4);c.restore();
-    const sg=c.createLinearGradient(0,base0-60*s,0,H);sg.addColorStop(0,'rgba(10,60,90,.45)');sg.addColorStop(.25,'rgba(10,60,90,.1)');sg.addColorStop(1,'rgba(20,40,50,.18)');c.fillStyle=sg;c.fillRect(0,base0-70*s,n,H);
+    c.save();c.translate(0,base0-60*s);c.scale(s*.6,s*.3);c.fillStyle=c.createPattern(lt,'repeat');c.fillRect(0,0,n/(s*.6),(H-base0+60*s)/(s*.3)+4);c.restore();
+    const sg=c.createLinearGradient(0,base0-60*s,0,H);sg.addColorStop(0,'rgba(10,60,90,.6)');sg.addColorStop(.3,'rgba(10,60,90,.18)');sg.addColorStop(1,'rgba(10,35,50,.3)');c.fillStyle=sg;c.fillRect(0,base0-70*s,n,H);
     // soft contact shadow where the rock meets the sand
     c.strokeStyle='rgba(0,10,18,.35)';c.lineWidth=10*s;c.filter=`blur(${5*s}px)`;c.beginPath();for(let x=0;x<=n;x+=6)c.lineTo(x,Math.max(edge(x),Math.min(b.top(x)+6*s,H))+3*s);c.stroke();c.filter='none';c.restore();}
   // corals
@@ -1003,20 +1003,20 @@ function build(){
   {GRAIN=mk(256,256);const gx=GRAIN.getContext('2d'),id=gx.createImageData(256,256),d=id.data;for(let i=0;i<d.length;i+=4){const v=rng()<.5?0:255;d[i]=d[i+1]=d[i+2]=v;d[i+3]=rng()*26;}gx.putImageData(id,0,0);}
   // foreground bank of sand & pebbles (closest to camera, parallax 1.3): appears along some stretches, up to ~15% of screen height
   {const PF=1.3,fw=Math.ceil(W+PAN*PF+200),fh=Math.ceil(H*.2),cv2=mk(fw,fh),g2=cv2.getContext('2d'),n1=makeNoise(fw,260),n2=makeNoise(fw,60),n3=makeNoise(fw,14);
-   const spans=[];for(let x=rr(-200,300);x<fw;x+=rr(700,1800)){const w=rr(1100,2400);spans.push([x,x+w,rr(.07,.14)]);x+=w;}
+   const spans=[];for(let x=rr(-200,300);x<fw;x+=rr(700,1800)){const w=rr(1100,2400);spans.push([x,x+w,rr(.05,.09)]);x+=w;}
    const top=X=>{let hgt=0;for(const[a,b2,hh]of spans){const e=Math.min(1,(X-a)/520,(b2-X)/520);if(e>0)hgt=Math.max(hgt,hh*H*(e*e*(3-2*e)));}if(hgt<=0)return fh+5;
      return fh-hgt*(.75+.5*n1(X,1))+(n2(X,5)-.5)*16+(n3(X,9)-.5)*6;};
    g2.beginPath();g2.moveTo(0,fh);for(let X=0;X<=fw;X+=4)g2.lineTo(X,top(X));g2.lineTo(fw,fh);g2.closePath();g2.save();g2.clip();
    const sd=SAND_TEX,pt=photoTex('pebbles_b',900,[['multiply','#d8ccb8',.35]]);
    if(sd){g2.save();g2.scale(1.6,.7);g2.fillStyle=g2.createPattern(sd,'repeat');g2.fillRect(0,0,fw/1.6,fh/.7);g2.restore();}
-   if(pt){const pc=mk(fw,fh),px=pc.getContext('2d');px.save();px.scale(.95,.6);px.fillStyle=px.createPattern(pt,'repeat');px.fillRect(0,0,fw/.95,fh/.6);px.restore();
+   if(pt){const pc=mk(fw,fh),px=pc.getContext('2d');px.save();px.scale(.5,.32);px.fillStyle=px.createPattern(pt,'repeat');px.fillRect(0,0,fw/.5,fh/.32);px.restore();
      const mask=mk(Math.ceil(fw/4),Math.ceil(fh/4)),mx=mask.getContext('2d'),id=mx.createImageData(mask.width,mask.height);
      for(let y=0;y<mask.height;y++)for(let X=0;X<mask.width;X++){const v=n1(X*4*1.7,y*12)*.6+n2(X*4,y*8)*.4,i=(y*mask.width+X)*4;id.data[i+3]=clamp((v-.42)*5,0,1)*255;}
      mx.putImageData(id,0,0);px.globalCompositeOperation='destination-in';px.drawImage(mask,0,0,fw,fh);g2.drawImage(pc,0,0);}
    const G=coralGroups(),pool=[...(G.hard||[])];
    for(let i=0;i<fw/300;i++){const X=rr(0,fw),t=top(X);if(t>fh-20||!pool.length)continue;const key=pick(pool),A=CORAL_ASSETS[key],hh=A.h*rr(.25,.45),ww=hh*A.w/A.hp,y=rr(t+14,fh+10);
      const bk=bakeCoral(key,ww,hh,rng()<.5,rr(-20,20)),bx=bk.getContext('2d');bx.globalCompositeOperation='source-atop';bx.fillStyle='rgba(225,210,185,.5)';bx.fillRect(0,0,ww,hh);g2.drawImage(bk,X-ww/2,y-hh);}
-   g2.fillStyle='rgba(20,95,135,.38)';g2.fillRect(0,0,fw,fh);g2.globalCompositeOperation='multiply';g2.fillStyle='#9fb8c4';g2.fillRect(0,0,fw,fh);g2.globalCompositeOperation='source-over';
+   g2.fillStyle='rgba(20,95,135,.25)';g2.fillRect(0,0,fw,fh);g2.globalCompositeOperation='multiply';g2.fillStyle='#9fb8c4';g2.fillRect(0,0,fw,fh);g2.globalCompositeOperation='source-over';
    const sh=g2.createLinearGradient(0,0,0,fh);sh.addColorStop(0,'rgba(170,215,230,.12)');sh.addColorStop(.3,'rgba(0,0,0,0)');sh.addColorStop(1,'rgba(0,18,30,.5)');g2.fillStyle=sh;g2.fillRect(0,0,fw,fh);g2.restore();
    FG2=mk(fw,fh+30);const fx=FG2.getContext('2d');fx.filter='blur(10px)';fx.globalAlpha=.55;fx.drawImage(cv2,0,30-14);fx.globalCompositeOperation='source-in';fx.fillStyle='#021018';fx.fillRect(0,0,fw,fh+30);
    fx.globalCompositeOperation='source-over';fx.filter='blur(.8px)';fx.globalAlpha=1;fx.drawImage(cv2,0,30);fx.filter='none';FG2.par=PF;}
@@ -1140,7 +1140,7 @@ function render(){
   if(!OFF.surface){tctx.globalCompositeOperation='source-over';tctx.clearRect(0,0,W,140);const pat=tctx.createPattern(causticSoft,'repeat');
   for(const[kx,ky,vx,vy,al]of[[1.1,.3,22,7,.8],[.7,.22,-15,5,.6]]){tctx.save();tctx.globalAlpha=al;tctx.translate(-(((camx*.15+T*vx)%(512*kx))+512*kx),-(((T*vy)%(512*ky))+512*ky));tctx.scale(kx,ky);tctx.fillStyle=pat;tctx.fillRect(0,0,W/kx+2048,2048);tctx.restore();}tctx.filter='none';tctx.globalAlpha=1;
   tctx.globalCompositeOperation='destination-in';const sgr=tctx.createLinearGradient(0,0,0,140);/*surface*/sgr.addColorStop(0,'rgba(0,0,0,.9)');sgr.addColorStop(.35,'rgba(0,0,0,.45)');sgr.addColorStop(1,'rgba(0,0,0,0)');tctx.fillStyle=sgr;tctx.fillRect(0,0,W,140);
-  ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=.24*(.5+.5*SUN)*(.7+.3*DAY);ctx.drawImage(tmp,0,0,W,140,0,0,W,140);ctx.restore();}
+  ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=.13*(.5+.5*SUN)*(.7+.3*DAY);ctx.drawImage(tmp,0,0,W,140,0,0,W,140);ctx.restore();}
   // marine snow
   if(!OFF.snow)for(const p of particles){let x=p.x-camx*p.z*.5;x=((x%W)+W)%W;const y=p.y+camy*p.z;
     if(p.z>1.3){const r=p.r*6,g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(220,245,255,${p.a*.14})`);g.addColorStop(1,'rgba(220,245,255,0)');ctx.fillStyle=g;ctx.fillRect(x-r,y-r,2*r,2*r);}
