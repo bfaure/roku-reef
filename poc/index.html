@@ -939,7 +939,7 @@ class Octopus{
     if(vis<.02)return;const sq=1;
     // shadow on the reef while jetting above it
     if(this.jy<-2){const gy=sy-this.jy,R=this.w*.45*(1+(-this.jy)/(this.w*2)),al=.3*(1-Math.min(1,-this.jy/(this.w*1.2)));const g=c.createRadialGradient(sx,gy-R*.05,0,sx,gy-R*.05,R);g.addColorStop(0,`rgba(0,8,15,${al})`);g.addColorStop(1,'rgba(0,8,15,0)');c.fillStyle=g;c.beginPath();c.ellipse(sx,gy-R*.05,R,R*.25,0,0,TAU);c.fill();}
-    const fS=this.faceS??this.dir,gth=1-Math.abs(fS),gt=gth*gth*(3-2*gth),wR=clamp((fS+1)/2,0,1);
+    const fS=this.face0??(this.face0=this.dir),gth=0,gt=gth*gth*(3-2*gth),wR=clamp((fS+1)/2,0,1);
     const W=im.width,Hh=im.height,crawl=this.state=='crawl',reach=crawl?Math.sin(this.cyc):0,jk=this.jetK,ph=this.ph,br=Math.sin(this.bph)*.035,bob=crawl?Math.sin(this.cyc*2):0;
     const AW=armWarp(this.key,W,Hh,T*1.0+this.seedA,crawl,this.dir,Math.max(0,-reach));
     const fn0=(u,v)=>{const armW=sstep(.28,.95,v)*(.35+.65*Math.abs(u-.3)/.7),lead=sstep(.45,1,u),mant=(1-sstep(.12,.45,v))*(1-sstep(.15,.6,u)),idle=crawl?1:.55;
