@@ -1026,7 +1026,7 @@ function build(){
    RAY=mk(256,1024);const r2=RAY.getContext('2d');r2.filter='blur(14px)';r2.drawImage(RS,0,0);}
   const sunSk=rr(.12,.28);
   rays=[...Array(16)].map(()=>({x:rr(-300,W+PAN*.2+300),w:rr(70,260),ph:rr(0,TAU),sp:rr(.03,.1),a:rr(.035,.09),sk:sunSk+rr(-.04,.04),dr:rr(-6,6)}));
-  particles=[...Array(220)].map(()=>({x:rr(0,W),y:rr(0,H),z:rr(.2,1.6),r:rr(.6,2),vx:rr(-3,3),vy:rr(-2,4),a:rr(.15,.5)}));
+  particles=[...Array(340)].map(()=>({x:rr(0,W),y:rr(0,H),z:rr(.2,1.6),r:rr(.6,2),vx:rr(-3,3),vy:rr(-2,4),a:rr(.15,.5)}));
   events={shark:rr(18,30),manta:rr(35,60),jelly:rr(6,15),chase:rr(8,18),turtle:rr(12,25)};
 }
 function camLeft(b){return 100+camx*b.par;}
