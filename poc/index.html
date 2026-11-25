@@ -178,7 +178,7 @@ function placePhotoCorals(b,c,sandLine){const G=coralGroups(),s=b.scale,n=b.widt
     const R=rr(50,130)*s,m=ri(3,8);for(let j=0;j<m;j++){const x=cx0+rr(-1,1)*R,t=b.top(x),y=Math.max(t+20*s,cy0+rr(-.45,.45)*R);if(t>sandLine||y>H+10)continue;
       const key=pick(rub),A=CORAL_ASSETS[key],sc=rr(.2,.5)*(1+.5*(y-t)/(H-t))*(j==0?1.3:1),hgt=A.h*s*sc,wid=hgt*A.w/A.hp,
         it={kind:'rubble',key,x,y,hgt,wid,flip:rng()<.5,hue:rr(-30,30),ph:0,dark:clamp((y-t)/(H-t),0,1)*.45};if(clear(it))stat.push(it);}}
-  stat.sort((a,b)=>a.y-b.y);
+  stat.sort((a,b)=>a.y-b.y);b.statItems=stat;
   for(const it of stat){
     const bc=bakeCoral(it.key,it.wid,it.hgt,it.flip,it.hue);
     coralShadow(c,bc,it.x,it.y,it.wid,it.hgt,s);if(it.dark){const x=bc.getContext('2d');x.globalCompositeOperation='source-atop';x.fillStyle=`rgba(10,20,28,${it.dark})`;x.fillRect(0,0,bc.width,bc.height);}
@@ -356,7 +356,7 @@ function genBand(b){
   for(let i=0;i<nG;i++){const x=rr(0,n),y=Math.min(H-5,Math.max(b.top(x),sandY)+rr(0,40)*s);const blades=[...Array(ri(5,11))].map(()=>({dx:rr(-18,18)*s,h:rr(50,130)*s,w:rr(3,6)*s,p:rr(0,TAU),col:pick(['#4f9a3a','#6ab048','#3c7d3c','#8ab83a'])}));b.grass.push({x,y,blades});}
   b.eels.push(...pendingEels);
   for(let i=0;i<(b.name=='far'?1:3);i++){const[x,y]=spot();b.emitters.push({x,y,t:rr(1,8),on:0,acc:0});}
-  b.crawlKinds=b.name=='far'?0:(b.name=='near'?ri(4,6):ri(2,3));b.wantOcto=b.name=='near'?(rng()<.75?1:0):b.name=='mid'?(rng()<.35?1:0):0;
+  b.crawlKinds=b.name=='far'?0:(b.name=='near'?ri(1,3):(rng()<.4?1:0));b.wantOcto=b.name=='near'?(rng()<.75?1:0):b.name=='mid'?(rng()<.35?1:0):0;
   // fog bake
   c.globalCompositeOperation='source-atop';c.globalAlpha=b.fog;c.fillStyle=waterGrad(c);c.fillRect(0,0,n,H);c.globalAlpha=1;c.globalCompositeOperation='source-over';
   if(b.blur){const bl=mk(n,H),bx=bl.getContext('2d');bx.filter=`blur(${b.blur}px)`;bx.drawImage(cnv,0,0);b.reef=bl;}
@@ -839,10 +839,12 @@ function legWarp(key,W,Hh,stepPh,walk,pick){const rig=LEGS[key];if(!rig)return n
 const CRAWL={crab_a:{kind:'crab',w:[60,85]},crab_b:{kind:'crab',w:[60,85]},crab_c:{kind:'crab',w:[70,95]},hermit_a:{kind:'hermit',w:[70,90]},lobster_a:{kind:'lobster',w:[90,120]},shrimp_a:{kind:'shrimp',w:[60,80]}};
 class Crawler{
   constructor(b,key){this.b=b;this.key=key;this.cfg=CRAWL[key];this.kind=this.cfg.kind;this.w=rr(...this.cfg.w)*b.scale;
-    this.off=rr(0,1)<.5?rr(0,8)*b.scale:rr(30,260)*b.scale;
-    for(let k=0;k<60;k++){this.x=rr(150,b.width-150);if(b.top(this.x)<H*.93&&!this.blocked(this.x))break;}this.dir=rng()<.5?-1:1;this.state='pause';this.timer=rr(0,4);this.ph=rr(0,TAU);this.tilt=0;this.speed=0;}
-  get y(){return Math.min(H+20,this.b.top(this.x)+this.off);}
-  blocked(x){const b=this.b;return(b.sway||[]).concat(b.anemones||[]).some(it=>it.wid&&Math.abs(x-it.x)<it.wid*.5+this.w*.4&&this.off<it.hgt*.75);}
+    this.off=0;this.floorY=H-rr(45,85)*b.scale;
+    this.gone=true;for(let k=0;k<120;k++){this.x=rr(150,b.width-150);if(!this.blocked(this.x)){this.gone=false;break;}}this.dir=rng()<.5?-1:1;this.state='pause';this.timer=rr(0,4);this.ph=rr(0,TAU);this.tilt=0;this.speed=0;}
+  yAt(x){const b=this.b;return Math.min(H-6*b.scale,Math.max(b.top(x)+4*b.scale,this.floorY));}
+  get y(){return this.yAt(this.x);}
+  blocked(x){const b=this.b,y=this.yAt(x);
+    return(b.sway||[]).concat(b.anemones||[]).some(it=>it.wid&&Math.abs(x-it.x)<it.wid*.5+this.w*.4)||(b.statItems||[]).some(it=>Math.abs(x-it.x)<it.wid*.42+this.w*.35&&y>it.y-it.hgt*.9&&y<it.y+14*b.scale);}
   update(dt){const b=this.b;this.timer-=dt;let scared=false;for(const pr of b.predators)if(Math.abs(pr.x-this.x)<pr.L)scared=true;
     if(this.timer<0){if(this.state=='walk'||scared){this.state='pause';this.timer=rr(1,this.kind=='crab'?4:8);}
       else{this.state='walk';this.timer=this.kind=='crab'?rr(.8,3):rr(2,6);if(rng()<.4&&(this.turnCd||0)<=0){this.dir*=-1;this.turnCd=rr(3,6);}}}
@@ -852,7 +854,7 @@ class Crawler{
     this.turnCd=(this.turnCd||0)-dt;const nx=this.x+this.dir*this.speed*dt;if(nx<60||nx>b.width-60||b.top(nx)>H*.95||Math.abs(b.top(nx)-b.top(this.x))>this.w*.25||this.blocked(nx+this.dir*this.w*.3)){if(this.turnCd<=0){this.dir*=-1;this.turnCd=rr(3,6);}this.speed=0;this.state='pause';this.timer=rr(1,2.5);}else this.x=nx;
     const sl=Math.atan2(b.top(this.x+this.w*.4)-b.top(this.x-this.w*.4),this.w*.8);this.tilt+=(clamp(sl*.7,-.35,.35)-this.tilt)*Math.min(1,dt*3);
     this.ph+=dt*(1+this.speed/(4*b.scale))*(this.kind=='crab'?2.2:1.2);}
-  draw(c,sx,sy){const im=FXI[this.key];if(!im)return;const w=this.w,k=w/im.width,h=im.height*k,ph=this.ph,moving=this.speed>1;
+  draw(c,sx,sy){const im=FXI[this.key];if(!im||this.gone)return;const w=this.w,k=w/im.width,h=im.height*k,ph=this.ph,moving=this.speed>1;
     const bob=moving?Math.abs(Math.sin(ph*2))*h*.03:0,N=16,sh=im.height/N;
     const LW=legWarp(this.key,im.width,im.height,this.ph*2.2,clamp(this.speed/(6*this.b.scale),0,1),T*2.3+this.x*.01);
     const body=(sxs,sy2,alpha)=>{c.save();c.translate(sx,sy);c.rotate(this.tilt);c.scale(sxs,sy2);c.globalAlpha=alpha;
@@ -1206,7 +1208,7 @@ else if(qs.has('raytest')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const k
   ks.forEach((k,r)=>{for(let i=0;i<5;i++){const g=new Glider(BANDS[2],k,1,0);g.L=230;g.ph=i/5*TAU;g.vy=0;g.draw(ctx,190+i*380,110+r*210);}});}
 else if(qs.has('crawltest')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const ks=Object.keys(CRAWL);
   const T0=T;['crab_a','crab_b','hermit_a'].forEach((k,r)=>{for(let i=0;i<6;i++){const cr=new Crawler(BANDS[2],k);cr.w=230;const walk=i<3;cr.speed=walk?20:0;cr.tilt=0;cr.dir=1;cr.faceS=1;cr.ph=i*.5;cr.x=0;T=i*.45;cr.draw(ctx,180+i*310,300+r*330);}});T=T0;}
-else if(qs.has('crawlzoom')){const b=BANDS[2];for(let i=0;i<200;i++)update(1/30);const cr=b.crawlers[0];camx=clamp((cr.x-100-W/2)/b.par,0,PAN);update(0);render();const sx=cr.x-camLeft(b),sy=cr.y+camy*b.par,z=420;const G=mk(W,H),g=G.getContext('2d');g.drawImage(cv,sx-z*.9,sy-z*.6,z*1.8,z,0,0,W,H);ctx.drawImage(G,0,0);}
+else if(qs.has('crawlzoom')){const b=BANDS[2];for(let i=0;i<200;i++)update(1/30);const cr=b.crawlers.find(c=>!c.gone)||b.crawlers[0];camx=clamp((cr.x-100-W/2)/b.par,0,PAN);update(0);render();const sx=cr.x-camLeft(b),sy=cr.y+camy*b.par,z=420;const G=mk(W,H),g=G.getContext('2d');g.drawImage(cv,sx-z*.9,sy-z*.6,z*1.8,z,0,0,W,H);ctx.drawImage(G,0,0);}
 else if(qs.has('octotest')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);OCTO.forEach((k,r)=>{for(let i=0;i<5;i++){const o=new Octopus(BANDS[2]);o.key=k;o.w=260;o.state=i==4?'jet':'crawl';o.t=0;o.dur=99;o.cyc=i/4*TAU;o.jetK=i==4?1:0;o.jy=0;o.camo=0;o.dir=1;o.tilt=0;o.ph=i/4*TAU*.5;o.ink=[];o.x=0;o.off=0;
     c2:{const b=o.b;o.b={top:()=>0};o.draw(ctx,200+i*370,330+r*330);o.b=b;}}});}
 else if(qs.has('turntest')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const tv=qs.get('turntest'),ks=(tv&&tv!='1'?tv:'bluetang,yellowtang,idol,clown').split(',');
@@ -1226,6 +1228,7 @@ else if(qs.has('rigdbg')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const ks
     ctx.restore();}});}
 else if(qs.has('octoarms')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const T0=T;OCTO.forEach((kk,r)=>{for(let i=0;i<6;i++){T=i*.7;const o=new Octopus(BANDS[2]);o.key=kk;o.w=260;o.state=qs.get('st')||'rest';o.t=99;o.dur=99;o.cyc=i*.9;o.camo=0;o.dir=1;o.faceS=1;o.tilt=0;o.ink=[];o.jy=0;o.jetK=0;o.x=0;o.off=0;o.chroma=0;
     const b=o.b;o.b={top:()=>0};o.draw(ctx,170+i*310,330+r*330);o.b=b;}});T=T0;}
+else if(qs.has('crabinfo')){for(let i=0;i<300;i++)update(1/30);document.getElementById('err').textContent='CRABS '+BANDS.map(b=>b.name+':'+b.crawlers.map(c=>c.key+(c.gone?'(gone)':'')+'@'+(c.x|0)+','+(c.y|0)+' top'+(b.top(c.x)|0)).join(';')).join(' | ');}
 else if(qs.has('rigtest')){ctx.fillStyle='#145a8a';ctx.fillRect(0,0,W,H);const ks=['turtle_a','turtle_b','turtle_c'];
   ks.forEach((k,r)=>{for(let i=0;i<6;i++){const g=new Glider(BANDS[2],k,1,0);g.L=280;g.ph=i/6*TAU;g.draw(ctx,170+i*315,180+r*340);}});}
 else if(qs.has('film')){// filmstrip: follow one fish for n frames (debug tool)
