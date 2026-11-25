@@ -1176,7 +1176,10 @@ function gradeCrawlers(){for(const k in CRAWL){const im=FXI[k];if(!im||im.cgrade
     x.globalCompositeOperation='copy';x.drawImage(M,0,0);x.globalCompositeOperation='source-atop';
     const r=Math.max(2,Math.min(c.width,c.height)*.03),E=mk(c.width,c.height),ex=E.getContext('2d');ex.fillStyle='#2c86ad';ex.fillRect(0,0,E.width,E.height);ex.globalCompositeOperation='destination-out';ex.filter=`blur(${r}px)`;ex.drawImage(c,0,0);
     x.globalAlpha=.28;x.drawImage(E,0,0);x.globalAlpha=1;c.cgraded=true;c.graded=true;FXI[k]=c;}}
-function gradeFish(){gradeCrawlers();for(const k in FRONT){const im=FRONT[k];if(im.graded)continue;const c=mk(im.width,im.height),x=c.getContext('2d');x.filter='saturate(.88) contrast(1.06) brightness(.97)';x.drawImage(im,0,0);x.filter='none';x.globalCompositeOperation='source-atop';
+function gradeEel(){const im=EEL_IMG;if(!im||im.egraded)return;const c=mk(im.width,im.height),x=c.getContext('2d');x.drawImage(im,0,0);
+  const M=mk(c.width,c.height),mx=M.getContext('2d');mx.drawImage(c,0,0);mx.globalCompositeOperation='multiply';mx.fillStyle='#d4e6e8';mx.fillRect(0,0,M.width,M.height);mx.globalCompositeOperation='destination-in';mx.drawImage(c,0,0);
+  x.globalCompositeOperation='copy';x.drawImage(M,0,0);c.egraded=true;c.graded=im.graded;EEL_IMG=c;}
+function gradeFish(){gradeCrawlers();gradeEel();for(const k in FRONT){const im=FRONT[k];if(im.graded)continue;const c=mk(im.width,im.height),x=c.getContext('2d');x.filter='saturate(.88) contrast(1.06) brightness(.97)';x.drawImage(im,0,0);x.filter='none';x.globalCompositeOperation='source-atop';
     const g=x.createLinearGradient(0,0,0,im.height);g.addColorStop(0,'rgba(235,250,255,.18)');g.addColorStop(.6,'rgba(0,30,55,.06)');g.addColorStop(1,'rgba(0,15,35,.38)');x.fillStyle=g;x.fillRect(0,0,im.width,im.height);x.fillStyle='rgba(30,120,160,.09)';x.fillRect(0,0,im.width,im.height);c.graded=true;FRONT[k]=c;}
 for(const k in FXI){if(k.startsWith('jelly')||FXI[k].graded)continue;const im=FXI[k],c=mk(im.width,im.height),x=c.getContext('2d');x.drawImage(im,0,0);x.globalCompositeOperation='source-atop';
     const g=x.createLinearGradient(0,0,0,im.height);g.addColorStop(0,'rgba(220,245,255,.14)');g.addColorStop(1,'rgba(0,15,35,.38)');x.fillStyle=g;x.fillRect(0,0,im.width,im.height);x.fillStyle='rgba(30,120,160,.08)';x.fillRect(0,0,im.width,im.height);c.graded=true;FXI[k]=c;}
