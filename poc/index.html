@@ -359,8 +359,8 @@ function genBand(b){
   b.crawlKinds=b.name=='far'?0:(b.name=='near'?ri(1,3):(rng()<.4?1:0));b.wantOcto=b.name=='near'?(rng()<.75?1:0):b.name=='mid'?(rng()<.35?1:0):0;
   // fog bake
   c.globalCompositeOperation='source-atop';c.globalAlpha=b.fog;c.fillStyle=waterGrad(c);c.fillRect(0,0,n,H);c.globalAlpha=1;c.globalCompositeOperation='source-over';
-  if(b.blur){const bl=mk(n,H),bx=bl.getContext('2d');bx.filter=`blur(${b.blur}px)`;bx.drawImage(cnv,0,0);b.reef=bl;}
-  else{const bl=mk(n,H),bx=bl.getContext('2d');bx.filter='blur(.7px)';bx.drawImage(cnv,0,0);bx.filter='none';bx.globalAlpha=.65;bx.drawImage(cnv,0,0);b.reef=bl;}
+  if(b.blur){const bl=mk(n,H),bx=bl.getContext('2d');bx.filter=`blur(${b.blur}px)`;bx.drawImage(cnv,0,0);b.reef=bl;cnv.width=cnv.height=0;}
+  else{const bl=mk(n,H),bx=bl.getContext('2d');bx.filter='blur(.7px)';bx.drawImage(cnv,0,0);bx.filter='none';bx.globalAlpha=.65;bx.drawImage(cnv,0,0);b.reef=bl;cnv.width=cnv.height=0;}
   {const m=mk(n,H),mx=m.getContext('2d');mx.drawImage(b.reef,0,0);mx.globalCompositeOperation='destination-out';mx.filter='blur(6px)';mx.fillStyle='#000';
    for(const e of b.eels)if(e.lip){const o=e.lip.open;mx.beginPath();mx.ellipse(o.x,o.y,o.rx*.95,o.ry*.95,0,0,TAU);mx.fill();}
    for(const st of b.structs)if(st.open&&st.kind=='cave'){const o=st.open;mx.beginPath();mx.ellipse(o.x,o.bot-o.h*.5,o.w*.45,o.h*.45,0,0,TAU);mx.fill();}b.cmask=m;}
@@ -984,7 +984,9 @@ function drawGrass(c,g,sx,sy){for(const bl of g.blades){c.strokeStyle=bl.col;c.l
 // ============================================================ WORLD
 let T=0,camx=0,camy=0,paused=false,showHud=false,frames=0,fps=0,fpsT=0;
 let GRAIN=null,FG2=null,causticSoft,caustic,fg,tmp,tctx,vignette,rays,particles,events,RAY;
-function build(){
+function freeWorld(){for(const b of BANDS){for(const k of['reef','cmask','cv'])if(b[k]&&b[k].width){b[k].width=b[k].height=0;}b.reef=b.cmask=null;}
+  for(const v of[FG2,fg,tmp])if(v&&v.width){v.width=v.height=0;}}
+function build(){if(BANDS[0].reef)freeWorld();
   rng=mulberry32(SEED);
   caustic=makeCaustic(512,26);causticSoft=mk(512,512);{const x=causticSoft.getContext('2d');x.filter='blur(2.5px)';x.drawImage(caustic,0,0);}ROCK_TEX=photoTex(rng()<.5?'rock_a':'rock_b',768,[['multiply','#ecd0c0',.35],['screen','#5a4650',.4]],1)||makeRockTex(256,'#857565','#a87888');SAND_TEX=photoTex(rng()<.5?'sand_a':'sand_b',512,[['multiply','#e8dcc4',.25]])||makeSandTex(256);
   for(const b of BANDS)genBand(b);
