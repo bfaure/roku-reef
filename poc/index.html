@@ -434,7 +434,7 @@ const PROF={bump:k=>Math.sin(Math.PI*k),flat:k=>Math.min(1,k*5,(1-k)*5),front:k=
   rear:k=>k<.85?.35+.65*k/.85:Math.max(0,1-(k-.85)/.15),shark:k=>k<.45?k/.45:Math.max(0,1-(k-.45)/.55)};
 
 // ============================================================ FISH DRAW
-const IMG_DK={},IMG_M={},IMG_DKM={},IMG_BL={},IMG_BLM={},FRONT={};let SCR=null;
+const IMG_LT={},IMG_LTM={},IMG_FG={},IMG_FGM={},IMG_DK={},IMG_M={},IMG_DKM={},IMG_BL={},IMG_BLM={},FRONT={};let SCR=null;
 // body thickness as a fraction of body depth (reef fish are laterally compressed; puffers/groupers/sharks are rounder)
 const THICK={bluetang:.4,yellowtang:.34,idol:.3,queenangel:.34,butterfly:.32,clown:.55,parrot:.58,lion:.55,grouper:.7,wrasse:.58,puffer:.95,gramma:.55,anthias:.5,chromis:.52,trigger:.5,shark:.8};
 // 2.5D "sliced" fish: the side photo is cut into thin cross-section slices along the body. Each slice gets a 3D heading
@@ -474,6 +474,8 @@ function drawPhotoFish(c,f,sx,sy){
     c.drawImage(src,srcX,0,sw+.6,h,fx,ty,fw,th);
     const dark=clamp((1-Math.abs(q.ca))*.4+Math.max(0,-q.sa)*.12,0,.55)*(.25+.75*bodyK);
     if(dark>.03&&dsrc){c.globalAlpha=dark;c.drawImage(dsrc,srcX,0,sw+.6,h,fx,ty,fw,th);c.globalAlpha=1;}
+    {const gl=.32*Math.max(0,q.sa)*(1-.4*Math.abs(q.sa))*bodyK,ls=useM?IMG_LTM[a.key]:IMG_LT[a.key];if(gl>.02&&ls){c.globalAlpha=gl;c.drawImage(ls,srcX,0,sw+.6,h,fx,ty,fw,th);}
+     const hz=(f.zd||0)*(f.band.name=='near'?.24:.14),fs=useM?IMG_FGM[a.key]:IMG_FG[a.key];if(hz>.02&&fs){c.globalAlpha=hz;c.drawImage(fs,srcX,0,sw+.6,h,fx,ty,fw,th);}c.globalAlpha=1;}
     // body thickness seen as the fish angles: a rounded, darker side band hugging the body outline (fins have no thickness)
     if(twE>3){const bsrc=useM?IMG_BLM[a.key]:IMG_BL[a.key];const bx=side>0?fx+fw-1.2:fx-twE+1.2,by=(q.top-.5)*h*k*p,bhp=(q.bot-q.top)*h*k*p;c.save();c.beginPath();c.ellipse(bx+twE/2,by+bhp/2,twE/2+.5,bhp/2*.95,0,0,TAU);c.clip();
       c.globalAlpha=1;c.drawImage(bsrc||src,srcX,0,sw+.6,h,bx,ty,twE+1,th);if(dsrc){c.globalAlpha=.08+.1*Math.abs(q.sa);c.drawImage(dsrc,srcX,0,sw+.6,h,bx,ty,twE+1,th);}c.globalAlpha=1;c.restore();}}
@@ -586,7 +588,7 @@ class Fish{
     const ph=(PHOTO[key]||[]).filter(k=>IMG[k]);this.asset=ph.length?Object.assign({key:ph[Math.floor(rng()*ph.length)]},FISH_ASSETS[ph[0]]):null;
     if(this.asset)Object.assign(this.asset,FISH_ASSETS[this.asset.key]);
     {const fk=Object.keys(window.FRONT_ASSETS||{}).filter(k=>FRONT_ASSETS[k].side==(this.asset&&this.asset.key)&&FRONT[k]);this.front=fk.length?fk[0]:null;}
-    this.sz=o.sz||rr(.82,1.15);this.L=(this.asset?PHOTO_LEN[key]||s.len:s.len)*this.sz*b.scale;
+    this.sz=o.sz||rr(.82,1.15);this.zd=o.school?rr(0,.5):Math.pow(rng(),1.4);this.sz*=1-.24*this.zd;this.L=(this.asset?PHOTO_LEN[key]||s.len:s.len)*this.sz*b.scale;
     this.cruise=s.speed*b.scale*rr(.85,1.15)*(.75+.25*this.sz);
     this.x=o.x;this.y=o.y;this.dir=o.dir||(rng()<.5?-1:1);this.face=this.dir;this.turnT=-1;this.turnCd=rr(0,2);this.turnDur=1;
     this.speed=this.cruise*rr(.3,.8);this.vx=this.dir*this.speed;this.vy=0;this.pitch=0;this.phase=rr(0,TAU);this.ampS=.5;this.thrust=.5;this.effort=1;this.bend=0;
@@ -1179,6 +1181,8 @@ for(const k in IMG){const im=IMG[k];if(im.graded)continue;const c=mk(im.width,im
     c.graded=true;IMG[k]=c;
     const d=mk(im.width,im.height),dx=d.getContext('2d');dx.drawImage(c,0,0);dx.globalCompositeOperation='source-atop';dx.fillStyle='rgb(4,16,26)';dx.fillRect(0,0,im.width,im.height);IMG_DK[k]=d;
     const mir=src=>{const q=mk(src.width,src.height),qx=q.getContext('2d');qx.translate(src.width,0);qx.scale(-1,1);qx.drawImage(src,0,0);return q;};IMG_M[k]=mir(c);IMG_DKM[k]=mir(d);
+    const tint=(col)=>{const q=mk(im.width,im.height),qx=q.getContext('2d');qx.drawImage(c,0,0);qx.globalCompositeOperation='source-atop';qx.fillStyle=col;qx.fillRect(0,0,im.width,im.height);return q;};
+    IMG_LT[k]=tint('rgb(235,250,255)');IMG_LTM[k]=mir(IMG_LT[k]);IMG_FG[k]=tint('rgb(20,98,140)');IMG_FGM[k]=mir(IMG_FG[k]);
     const bl=mk(im.width,im.height),bx=bl.getContext('2d');bx.filter='blur(5px) brightness(.86)';bx.drawImage(c,0,0);bx.filter='none';bx.globalCompositeOperation='destination-in';bx.drawImage(c,0,0);IMG_BL[k]=bl;IMG_BLM[k]=mir(bl);}
   if(EEL_IMG&&!EEL_IMG.graded){const im=EEL_IMG,c=mk(im.width,im.height),x=c.getContext('2d');x.drawImage(im,0,0);x.globalCompositeOperation='source-atop';
     const g=x.createLinearGradient(0,0,0,im.height);g.addColorStop(0,'rgba(220,245,255,.12)');g.addColorStop(1,'rgba(0,15,35,.4)');x.fillStyle=g;x.fillRect(0,0,im.width,im.height);c.graded=true;EEL_IMG=c;}}
