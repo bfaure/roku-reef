@@ -646,6 +646,7 @@ class Fish{
     }
     const flee=(px,py,R)=>{const ex=this.x-px,ey=this.y-py,d=Math.hypot(ex,ey)+1e-3;if(d<R){const k=(1-d/R);dx+=ex/d*k*this.cruise*12;dy+=ey/d*k*this.cruise*8;want=Math.max(want,this.cruise*(1.5+2*k));urgent=true;if(this.state!='swim'){this.state='swim';this.timer=0;}}};
     if(s.beh!='cruise')for(const pr of b.predators)flee(pr.x,pr.y,pr.L*.9+170*b.scale);
+    for(const m of b.mantas){if(!m.L)continue;const ex=this.x-m.x,ey=this.y-m.y,d=Math.hypot(ex,ey)+1e-3,R=m.L*.7+40*b.scale;if(d<R){const k=1-d/R;dx+=ex/d*k*this.cruise*4;dy+=ey/d*k*this.cruise*4;}}
     if(this.fleeFrom){if(this.fleeFrom.chase===this)flee(this.fleeFrom.x,this.fleeFrom.y,280*b.scale);else this.fleeFrom=null;}
     const ahead=Math.min(b.top(this.x+this.face*(this.L+70*b.scale)),b.top(this.x+this.face*(this.L*2.5+140*b.scale)));
     const floor=Math.min(b.top(this.x),ahead)-this.L*.4;if(this.y>floor&&this.state!='peck'){dy-=(this.y-floor)*7;if(ahead<this.y)want*=.7;}if(this.y<H*.08)dy+=(H*.08-this.y)*3;
