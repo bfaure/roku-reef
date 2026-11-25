@@ -462,6 +462,7 @@ function drawPhotoFish(c,f,sx,sy){
   const headCos=Math.cos(pH);
   c.save();c.translate(sx,sy);c.rotate(f.pitch*(headCos<0?-1:1)*Math.min(1,Math.abs(headCos)*1.5));
   const sw=w/N;
+  const depthDk=clamp((sy/H-.3)*.32,0,.2);
   let hx=0,hn=0,hp=1,dep=0;
   for(const q of sl){const Zr=q.cz-az,p=F/(F-Zr),xs=(q.cx-ax)*p,bh=(q.bot-q.top)*h*k;if(q.u<.35){hx+=xs;hn++;hp=Math.max(hp,p);}if(q.u>.15&&q.u<.6)dep=Math.max(dep,bh);}
   const fr=f.turnT>=0&&f.front?clamp((.85-Math.abs(Math.cos(pH)))/.6,0,1):0,frA=fr*fr*(3-2*fr);
@@ -472,7 +473,7 @@ function drawPhotoFish(c,f,sx,sy){
       bodyK=q.u<.3?Math.sin(q.u/.3*HPI):q.u<.72?1:Math.max(0,1-(q.u-.72)/.1),fw=Math.abs(q.ca)*ds*p+2.2,tw=noEdge?0:Math.abs(q.sa)*bh*thickR*p*bodyK,side=Math.sign(q.ca||1)*Math.sign(q.sa||1);
     const bA=clamp((Math.abs(q.sa)-.72)/.2,0,1),twE=tw*bA,fx=xs-(fw+twE)/2+(side>0?0:twE);mnX=Math.min(mnX,fx);mxX=Math.max(mxX,fx+fw+twE);
     c.drawImage(src,srcX,0,sw+.6,h,fx,ty,fw,th);
-    const dark=clamp((1-Math.abs(q.ca))*.4+Math.max(0,-q.sa)*.12,0,.55)*(.25+.75*bodyK);
+    const dark=clamp((1-Math.abs(q.ca))*.4+Math.max(0,-q.sa)*.12,0,.55)*(.25+.75*bodyK)+depthDk;
     if(dark>.03&&dsrc){c.globalAlpha=dark;c.drawImage(dsrc,srcX,0,sw+.6,h,fx,ty,fw,th);c.globalAlpha=1;}
     {const gl=.32*Math.max(0,q.sa)*(1-.4*Math.abs(q.sa))*bodyK,ls=useM?IMG_LTM[a.key]:IMG_LT[a.key];if(gl>.02&&ls){c.globalAlpha=gl;c.drawImage(ls,srcX,0,sw+.6,h,fx,ty,fw,th);}
      const hz=(f.zd||0)*(f.band.name=='near'?.24:.14),fs=useM?IMG_FGM[a.key]:IMG_FG[a.key];if(hz>.02&&fs){c.globalAlpha=hz;c.drawImage(fs,srcX,0,sw+.6,h,fx,ty,fw,th);}c.globalAlpha=1;}
